@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SP Laboratorio 3 - Barreto Juan Cruz</title>
+    <script src="Persona.js"></script>
+    <script src="Futbolista.js"></script>
+    <script src="Profesional.js"></script>
+    <script src="scrypt.js"></script>
+</head>
+
+<body class="main-content">
+    <div class="contenedor-tabla" id="contenedor-tabla">
+        <div class="row division">
+            <h3>Form datos</h3>
+            <button onclick="abrirFormulario()">Agregar elemento</button>
+        </div>
+        
+        <div id="checkbox-columnas" class="row">
+            <label class="mostrar-label">Mostrar columnas: </label>
+        </div>
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th id="cabecera-id" columna="id">Id</th>
+                    <th id="cabecera-nombre" columna="nombre">Nombre</th>
+                    <th id="cabecera-apellido" columna="apellido">Apellido</th>
+                    <th id="cabecera-edad" columna="edad">Edad</th>
+                    <th id="cabecera-equipo" columna="equipo">Equipo</th>
+                    <th id="cabecera-posicion" columna="posicion">Posicion</th>
+                    <th id="cabecera-cantidadGoles" columna="cantidadGoles">Cantidad Goles</th>
+                    <th id="cabecera-titulo" columna="titulo">Titulo</th>
+                    <th id="cabecera-facultad" columna="facultad">facultad</th>
+                    <th id="cabecera-añoGraduacion" columna="añoGraduacion">Año Graduacion</th>
+                    <th id="cabecera-modificar" columna="modificar">Modificar</th>
+                    <th id="cabecera-eliminar" columna="eliminar">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody id="filas-tabla"></tbody>
+        </table>
+    </div>
+
+
+
+    <div class="contenedor-form" id="abm-form" style="display: none;">
+        Formulario ABM
+        <select id="tipo-input" onchange="seleccionarTipoPersona()">
+            <option value="1">Futbolista</option>
+            <option value="2">Profesional</option>
+        </select>
+        <input class="text-input" id="id-input" type="number" placeholder="Ingrese un id">
+        <input class="text-input" id="nombre-input" placeholder="Ingrese el nombre" type="text">
+        <input class="text-input" id="apellido-input" placeholder="Ingrese el apellido" type="text">
+        <input class="text-input" id="edad-input" type="number" placeholder="Ingrese la edad">
+
+        <input class="text-input" id="equipo-input" type="text" placeholder="Ingrese el equipo">
+        <input class="text-input" id="posicion-input" type="text" placeholder="Ingrese la posicion">
+        <input class="text-input" id="cantidadGoles-input" type="number" placeholder="Ingrese la cantidad de goles">
+
+        <input class="text-input" id="titulo-input" type="text" placeholder="Ingrese el titulo">
+        <input class="text-input" id="facultad-input" type="text" placeholder="Ingrese la facultad">
+        <input class="text-input" id="añoGraduacion-input" type="number" placeholder="Ingrese el año de graduacion">
+
+
+        <div class="row-button">
+            <button class="cancel-button" onclick="cancelarAccion()">
+                Cancelar
+            </button>
+            <button onclick="aceptarAccion()">
+                Aceptar
+            </button>
+        </div>
+    </div>
+
+    <div id="spinner" class="spinner-container">
+        <div class="spinner"></div>
+    </div>
+      
+</body>
+
+
+
+<style>
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #333333;
+        color: #CCCCCC;
+        height: 100vh;
+        width: 100vw;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .contenedor-form {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        border-radius: 8px;
+        min-width: 300px;
+        border: 1px solid white;
+
+        .text-input {
+            margin: 5px 0;
+        }
+
+        .row-button {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            margin-top: 8px;
+
+            .cancel-button {
+                margin-right: 5px;
+            }
+        }
+    }
+
+    .fila-generada:hover {
+        background-color: #494949;
+    }
+
+    .contenedor-tabla {
+        border: 1px solid white;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+        width: 900px;
+        padding: 16px;
+    }
+
+    .tabla {
+        width: 100%;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 900px;
+    }
+
+    .division {
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    th {
+        padding: 8px;
+    }
+
+    td {
+        padding: 8px;
+        text-align: center;
+    }
+
+    /* Estilos para el contenedor del spinner */
+    .spinner-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    z-index: 9999; /* Asegura que esté por encima de otros elementos */
+    display: none; /* Inicialmente oculto */
+    justify-content: center;
+    align-items: center;
+    }
+
+    /* Estilos para el spinner */
+    .spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3); /* Color y grosor del borde */
+    border-top: 4px solid #ffffff; /* Color del borde superior */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite; /* Animación de rotación */
+    }
+
+    @keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    }
+
+</style>
+
+
+</html>
